@@ -127,7 +127,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# the offset 160 (0xA0) is hardcoded to the __TEXT section of X86_64 only\nprintf '\\x07' | dd of=${BUILT_PRODUCTS_DIR}/${EXECUTABLE_NAME} bs=1 seek=160 count=1 conv=notrunc\n";
+			shellScript = "# the offset 160 (0xA0) is hardcoded to the __TEXT section of x86_64 only\nprintf '\\x07' | dd of=${BUILT_PRODUCTS_DIR}/${EXECUTABLE_NAME} bs=1 seek=160 count=1 conv=notrunc\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

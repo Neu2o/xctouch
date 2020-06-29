@@ -49,7 +49,6 @@ inline bool unprotect_mem(vm_address_t addr, vm_size_t size)
     return vm_protect(mach_task_self_, addr, size, false, VM_PROT_ALL) == KERN_SUCCESS;
 }
 
-// https://developer.apple.com/documentation/kernel/lc_str
 static bool rewrite_rcmd(struct rpath_command* rc, const char* ptr)
 {
     if (!unprotect_mem((vm_address_t)&rc->path, sizeof(rc->path))) {
@@ -113,7 +112,6 @@ static NSBundle *XcodeBundle(void)
         std::cerr << "Xcode.app not found." << std::endl;
         exit(EX_SOFTWARE);
     }
-
 #ifdef VERBOSE
     NSString *xcodeVersion = [[xcodeBundle infoDictionary] valueForKey:@"CFBundleShortVersionString"];
     NSString *xcodePath = [xcodeBundle bundlePath];
@@ -132,12 +130,12 @@ static NSBundle *XcodeBundle(void)
 // automatically. There is no need to specify libraries individually, which
 // is far more robust against Xcode upgrades.
 //
-// For each @rpath modification your need a preallocated block of memory in
-// the Mach-O header. You can specifiy such block by a "@placeholder" entry
+// For each @rpath modification you need a preallocated block of memory in
+// the mach-o header. You can specifiy such block by a "@placeholder" entry
 // in "Build Settings -> Runpath Seach Paths".
 static void TrickDylibLoader(NSBundle *xcodeBundle)
 {
-    // ensure 32 bit offset boundary to the Mach-O header (static)
+    // ensure 32 bit offset boundary to the mach-o header (static)
     static char privateFrameworks[PATH_MAX];
     static char sharedFrameworks[PATH_MAX];
     strlcpy(privateFrameworks, [[xcodeBundle privateFrameworksPath] UTF8String], PATH_MAX);
@@ -196,7 +194,6 @@ static void InitializeXcodeIDE(void)
         std::cerr << "IDEInitialize failed." << std::endl;
         exit(EX_SOFTWARE);
     }
-
 #ifdef VERBOSE
     std::cout << "IDEInitialize done." << std::endl;
 #endif
@@ -267,7 +264,7 @@ int main(int argc, const char* argv[])
             exit(EX_DATAERR);
         }
 
-        // read project
+        // open project
         id<PBXProject> project = [PBXProject projectWithFile:absolutePath];
         if (!project)
         {

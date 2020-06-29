@@ -71,6 +71,7 @@
 			buildPhases = (
 				E72922F61E9FED65000A3A7B /* Sources */,
 				E72922F71E9FED65000A3A7B /* Frameworks */,
+				E718CF4B248F827D003263AE /* ShellScript */,
 				E72922F81E9FED65000A3A7B /* CopyFiles */,
 			);
 			buildRules = (
@@ -113,6 +114,22 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E718CF4B248F827D003263AE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# the offset 160 (0xA0) is hardcoded to the __TEXT section of X86_64 only\nprintf '\\x07' | dd of=${BUILT_PRODUCTS_DIR}/${EXECUTABLE_NAME} bs=1 seek=160 count=1 conv=notrunc\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E72922F61E9FED65000A3A7B /* Sources */ = {

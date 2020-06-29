@@ -233,7 +233,7 @@
 		E72923021E9FED65000A3A7B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LD_RUNPATH_SEARCH_PATHS = "@placeholder @placeholder";
+				LD_RUNPATH_SEARCH_PATHS = "@placeholder @placeholder @placeholder";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -241,7 +241,7 @@
 		E72923031E9FED65000A3A7B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LD_RUNPATH_SEARCH_PATHS = "@placeholder @placeholder";
+				LD_RUNPATH_SEARCH_PATHS = "@placeholder @placeholder @placeholder";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

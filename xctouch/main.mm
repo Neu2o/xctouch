@@ -25,6 +25,11 @@ typedef struct mach_header macho_header;
 #include <vector>
 #include <limits>
 
+inline bool unprotect_mem(vm_address_t addr, vm_size_t size)
+{
+    return vm_protect(mach_task_self_, addr, size, false, VM_PROT_ALL) == KERN_SUCCESS;
+}
+
 // https://opensource.apple.com/source/dyld/dyld-519.2.1/src/ImageLoaderMachO.cpp.auto.html
 static void collect_rcmds(const macho_header* mh, std::vector<struct rpath_command*>& rcmds, const char* pattern = nullptr)
 {
@@ -42,11 +47,6 @@ static void collect_rcmds(const macho_header* mh, std::vector<struct rpath_comma
         }
         cmd = (const struct load_command*)(((char*)cmd)+cmd->cmdsize);
     }
-}
-
-inline bool unprotect_mem(vm_address_t addr, vm_size_t size)
-{
-    return vm_protect(mach_task_self_, addr, size, false, VM_PROT_ALL) == KERN_SUCCESS;
 }
 
 static bool rewrite_rcmd(struct rpath_command* rc, const char* ptr)
@@ -138,25 +138,28 @@ static void TrickDylibLoader(NSBundle *xcodeBundle)
     // ensure 32 bit offset boundary to the mach-o header (static)
     static char privateFrameworks[PATH_MAX];
     static char sharedFrameworks[PATH_MAX];
+    static char builtInPlugIns[PATH_MAX];
     strlcpy(privateFrameworks, [[xcodeBundle privateFrameworksPath] UTF8String], PATH_MAX);
     strlcpy(sharedFrameworks, [[xcodeBundle sharedFrameworksPath] UTF8String], PATH_MAX);
+    strlcpy(builtInPlugIns, [[xcodeBundle builtInPlugInsPath] UTF8String], PATH_MAX);
 
     std::vector<struct rpath_command*> rcmds;
     collect_rcmds(&_mh_execute_header, rcmds, "@placeholder");
 
     // validate number of @placeholder entries
-    if (rcmds.size() != 2)
+    if (rcmds.size() != 3)
     {
         exit(EX_SOFTWARE);
     }
 
     rewrite_rcmd(rcmds[0], privateFrameworks);
     rewrite_rcmd(rcmds[1], sharedFrameworks);
+    rewrite_rcmd(rcmds[2], builtInPlugIns);
 }
 
 static void LoadXcodeDylibs(void)
 {
-    std::vector<const char*> libs = {
+    static const std::vector<const char*> libs = {
         "IDEFoundation.framework/IDEFoundation"
     };
 
